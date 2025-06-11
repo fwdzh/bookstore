@@ -1,0 +1,36 @@
+{% extends "store/layout.html" %}
+{% load static %}
+
+{% block link%}
+<link rel="stylesheet" href="{% static 'store/index.css' %}">
+{% endblock %}
+
+{% block body %}
+
+<div class="navbar">
+
+    <ul>
+        <li>作品分类</li>
+        <li>
+            <a href="{% url 'all' %}">全部作品</a>
+        </li>
+        <li>排行</li>
+        <li>完本</li>
+        <li>免费</li>
+    </ul>
+
+</div>
+<div class="container">
+    <div class="category">
+        {% for type in all_types %}
+        <a href="#">
+            <img src="{% static '/img/chenjunjie.jpg' %}" height="40px" width="40px">
+            {{ type}}
+        </a>
+        {% endfor %}
+    </div>
+    <div class="main">
+        <img src="{% static '/img/chenjunjie.jpg' %}" width="500px">
+    </div>
+</div>
+{% endblock %}
