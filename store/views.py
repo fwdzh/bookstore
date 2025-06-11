@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from django.http import HttpResponse
@@ -51,3 +52,8 @@ def register(request):
         messages.success(request, "注册成功，请登录！")
         return redirect('login')
     return render(request, 'store/register.html')
+
+@login_required
+def profile(request):
+    user = request.user
+    return render(request, 'store/profile.html', {'user': user})

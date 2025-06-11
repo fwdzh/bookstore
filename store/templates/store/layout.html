@@ -32,7 +32,7 @@
         <div class="top-right">
             {% if request.user.is_authenticated %}
             <div class="login-btn">
-                <a href="#">{{ request.user.username }}</a>
+                <a href="{% url 'profile' %}">{{ request.user.username }}</a>
             </div>
             <div class="register-btn">
                 <a href="{% url 'logout' %}">退出</a>
