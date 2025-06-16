@@ -1,59 +1,48 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Store</title>
-    <link rel="stylesheet" href="{% static 'store/style.css' %}">
-
-    {% block link %}
-    {% endblock %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}俊杰中文网{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'store/style.css' %}">
+  {% block link %}{% endblock %}
 </head>
-
 <body>
-    <div class="top">
-        <h1>俊杰中文网</h1>
-        <div class="search">
-            <input type="text" name="search" placeholder="搜索感兴趣的书">
-            <a href="#">
-                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"
-                    style="color: #555;">
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M16.3451 15.2003C16.6377 15.4915 16.4752 15.772 16.1934 16.0632C16.15 16.1279 16.0958 16.1818 16.0525 16.2249C15.7707 16.473 15.4456 16.624 15.1854 16.3652L11.6848 12.8815C10.4709 13.8198 8.97529 14.3267 7.44714 14.3267C3.62134 14.3267 0.5 11.2314 0.5 7.41337C0.5 3.60616 3.6105 0.5 7.44714 0.5C11.2729 0.5 14.3943 3.59538 14.3943 7.41337C14.3943 8.98802 13.8524 10.5087 12.8661 11.7383L16.3451 15.2003ZM2.13647 7.4026C2.13647 10.3146 4.52083 12.6766 7.43624 12.6766C10.3517 12.6766 12.736 10.3146 12.736 7.4026C12.736 4.49058 10.3517 2.1286 7.43624 2.1286C4.50999 2.1286 2.13647 4.50136 2.13647 7.4026Z"
-                        fill="currentColor"></path>
-                </svg>
+  <!-- 顶部导航 -->
+  <header class="navbar">
 
-            </a>
-        </div>
+    <div class="container nav-content">
+    <a href="{% url 'index' %}">
+      <div class="logo">俊杰中文网</div>
+    </a>
+      <form class="search-box">
+        <input type="text" name="q" placeholder="搜索感兴趣的书">
+        <button type="submit">🔍</button>
+      </form>
 
-        <div class="top-right">
-            {% if request.user.is_authenticated %}
-            <div class="login-btn">
-                <a href="{% url 'profile' %}">{{ request.user.username }}</a>
-            </div>
-            <div class="register-btn">
-                <a href="{% url 'logout' %}">退出</a>
-            </div>
-            {% else %}
-            <div class="login-btn">
-                <a href="{% url 'login' %}">登录</a>
-            </div>
-            <div class="register-btn">
-                <a href="{% url 'register' %}">注册</a>
-            </div>
-            {% endif %}
-        </div>
+      <div class="user-actions">
+        {% if request.user.is_authenticated %}
+          <a href="{% url 'profile' %}">{{ request.user.username }}</a>
+          <a href="{% url 'logout' %}">退出</a>
+        {% else %}
+          <a href="{% url 'login' %}">登录</a>
+          <a href="{% url 'register' %}" class="btn-primary">注册</a>
+        {% endif %}
+      </div>
     </div>
+  </header>
 
+  <!-- 主体内容 -->
+  <main class="container">
+    {% block body %}{% endblock %}
+  </main>
 
-    {% block body %}
-    {% endblock %}
-    <footer>
-        Copyright &copy; 2025 陈俊杰
-    </footer>
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="container">
+      &copy; 2025 陈俊杰 - 版权所有
+    </div>
+  </footer>
 </body>
-
 </html>

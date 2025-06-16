@@ -1,32 +1,164 @@
 {% extends "store/layout.html" %}
 {% load static %}
+
 {% block link %}
-    <link rel="stylesheet" href="{% static 'store/all.css' %}">
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #fafafa;
+}
+
+.main-content {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    min-height: 80vh;
+}
+
+.book_list {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.book {
+    width: 160px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transition: transform 0.2s;
+}
+
+.book:hover {
+    transform: translateY(-5px);
+}
+
+.book img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.book-info {
+    padding: 10px;
+}
+
+.book-info .title a {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+}
+
+.book-info .title a:hover {
+    color: #007acc;
+}
+
+.other_info {
+    font-size: 12px;
+    color: #888;
+    margin-top: 6px;
+}
+
+.intro {
+    font-size: 13px;
+    color: #444;
+    margin-top: 8px;
+    line-height: 1.4;
+    height: 40px;
+    overflow: hidden;
+}
+
+.pagination {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.pagination .step-links a {
+    margin: 0 6px;
+    padding: 6px 12px;
+    border: 1px solid #007acc;
+    border-radius: 4px;
+    color: #007acc;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.pagination .step-links a:hover {
+    background-color: #007acc;
+    color: #fff;
+}
+
+.pagination .step-links .current {
+    margin: 0 10px;
+    font-weight: bold;
+}
+</style>
 {% endblock %}
+
 {% block body %}
-    <div class="main-content">
-        <div class="sidebar">
-            <h1>全部作品</h1>
-        </div>
+<div class="main-content">
 
-        <div class="book_list">
-            {% for book in books %}
-                <div class="book">
-                    <img src="{{ book.img_url }}" alt="book_cover" width="150px">
-                    <div class="book-info">
-                        <h4 class="title">{{ book.title }}</h4>
-                        <div class="other_info">
-                            {{ book.author }}
-                            &nbsp; | &nbsp;
-                            {{ book.book_type }}
-                        </div>
-                        <p class="intro">
-                            {{ book.intro }}
-                        </p>
-                    </div>
 
-                </div>
-            {% endfor %}
-        </div>
+  <aside class="sidebar">
+    <h3>分类导航</h3>
+    <div class="category-list">
+      {% for type in all_types %}
+      <a href="#" class="category-item">
+        <img src="{% static 'img/chenjunjie.jpg' %}" alt="{{ type }}">
+        <span>{{ type }}</span>
+      </a>
+      {% endfor %}
     </div>
+  </aside>
+    <section style="flex: 1;">
+        {% if page_obj.object_list %}
+            <div style="margin-bottom: 15px;">
+                共 {{ book_count }} 本书
+            </div>
+
+            <div class="book_list">
+                {% for book in page_obj %}
+                    <div class="book">
+                        <a href="{% url 'book_detail' book.id %}">
+                            <img src="{{ book.img_url }}" alt="{{ book.title }}">
+                        </a>
+                        <div class="book-info">
+                            <div class="title">
+                                <a href="{% url 'book_detail' book.id %}">{{ book.title }}</a>
+                            </div>
+                            <div class="other_info">{{ book.author }} | {{ book.book_type }}</div>
+                            <div class="intro">{{ book.intro }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>当前没有任何书籍，敬请期待更新！</p>
+        {% endif %}
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; 首页</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+                {% endif %}
+
+                <span class="current">
+                    第 {{ page_obj.number }} / 共 {{ page_obj.paginator.num_pages }} 页
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">尾页 &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </section>
+</div>
 {% endblock %}

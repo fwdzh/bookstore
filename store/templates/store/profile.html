@@ -1,11 +1,52 @@
 {% extends 'store/layout.html' %}
 
-{% block body %}
-    <div>
-        {{ user.username }}
+{% block link %}
+<style>
+    .profile-container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        <p>
-            注册时间: {{ user.date_joined }}
-        </p>
+    .profile-container h2 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .profile-info {
+        font-size: 18px;
+        color: #555;
+        line-height: 1.8;
+    }
+
+    .profile-info span {
+        font-weight: bold;
+        color: #222;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="profile-container">
+    <h2>个人信息</h2>
+    <div class="profile-info">
+        <p><span>用户名：</span>{{ user.username }}</p>
+        <p><span>注册时间：</span>{{ user.date_joined|date:"Y年m月d日 H:i" }}</p>
+        <p><span>当前余额：</span>{{ user.profile.balance }} 元</p>
+        <form method="post" action="{% url 'add_balance' %}">
+        {% csrf_token %}
+        <button type="submit" style="background-color:#4CAF50;color:white;padding:8px 16px;border:none;border-radius:4px;cursor:pointer;">
+            都是弗雷尔卓德人，交个朋友。
+        </button>
+        </form>
+
+        <p><a href="{% url 'purchase_history' %}">🛒 我的购买记录</a></p>
     </div>
+</div>
 {% endblock %}
