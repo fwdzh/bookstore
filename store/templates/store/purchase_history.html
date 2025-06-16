@@ -1,0 +1,14 @@
+{% extends 'store/layout.html' %}
+{% block body %}
+<h2>我的购买记录</h2>
+<ul>
+    {% for purchase in purchases %}
+        <li>
+            <strong>{{ purchase.book.title }}</strong> - ￥{{ purchase.price_at_purchase }} <br>
+            时间：{{ purchase.purchase_time|date:"Y年m月d日 H:i" }}
+        </li>
+    {% empty %}
+        <li>你还没有购买任何书籍。</li>
+    {% endfor %}
+</ul>
+{% endblock %}

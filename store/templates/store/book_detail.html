@@ -1,0 +1,151 @@
+{% extends "store/layout.html" %}
+{% load static %}
+{% block link %}
+<style>
+.book-detail-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.book-detail-container h2 {
+    font-size: 2.4rem;
+    margin-bottom: 20px;
+    color: #007acc;
+}
+
+.book-detail-container img {
+    display: block;
+    max-width: 250px;
+    width: 100%;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.book-detail-container p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 10px 0;
+}
+
+.book-detail-container strong {
+    color: #555;
+}
+
+.price {
+    font-size: 1.5rem;
+    color: #e94e1b;
+    font-weight: 700;
+    margin-top: 15px;
+}
+.buy-button {
+    padding: 10px 20px;
+    background-color: #007acc;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s ease;
+}
+
+.buy-button:hover {
+    background-color: #005f99;
+}
+.popup-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* 页面变暗 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9998;
+}
+
+.popup {
+    background-color: #fff;
+    color: #333;
+    padding: 30px;
+    border-radius: 10px;
+    width: 320px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    position: relative;
+    z-index: 9999;
+    text-align: center;
+}
+
+.popup .message {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.popup .success { color: green; }
+.popup .error { color: red; }
+.popup .info { color: #007acc; }
+
+.popup button {
+    margin-top: 20px;
+    padding: 8px 16px;
+    background-color: #007acc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popup button:hover {
+    background-color: #005f99;
+}
+</style>
+{% endblock %}
+{% block body %}
+<div class="book-detail-container">
+    <h2>{{ book.title }}</h2>
+    <img src="{{ book.img_url }}" alt="{{ book.title }}">
+    <p><strong>作者：</strong>{{ book.author }}</p>
+    <p><strong>类型：</strong>{{ book.book_type }}</p>
+    <p class="price"><strong>价格：</strong>￥{{ book.price }}</p>
+    <p><strong>简介：</strong>{{ book.intro }}</p>
+
+    <form method="post" action="{% url 'buy_book' book.id %}">
+        {% csrf_token %}
+        <button type="submit" class="buy-button">立即购买</button>
+    </form>
+    {% if messages %}
+  <div id="popup-backdrop" class="popup-backdrop">
+    <div id="popup" class="popup">
+      {% for message in messages %}
+        <p class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</p>
+      {% endfor %}
+      <button onclick="hidePopup()">关闭弹窗</button>
+    </div>
+  </div>
+{% endif %}
+</div>
+<script>
+function hidePopup() {
+    document.getElementById('popup-backdrop').style.display = 'none';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const popup = document.getElementById('popup-backdrop');
+    if (popup) {
+        popup.style.display = 'flex'; // 显示弹窗
+        setTimeout(() => {
+            popup.style.display = 'none'; // 3 秒后自动隐藏
+        }, 3000);
+    }
+});
+</script>
+
+{% endblock %}

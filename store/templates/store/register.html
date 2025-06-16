@@ -1,11 +1,124 @@
 {% extends "store/layout.html" %}
+
+{% block link %}
+<style>
+    .register-container {
+        max-width: 400px;
+        margin: 80px auto;
+        padding: 40px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .register-container h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        color: #333;
+    }
+
+    .register-container label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 16px;
+        color: #555;
+    }
+
+    .register-container input[type="text"],
+    .register-container input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+    }
+
+    .register-container input[type="text"]:focus,
+    .register-container input[type="password"]:focus {
+        border-color: #4CAF50;
+        outline: none;
+    }
+
+    .register-container button {
+        width: 100%;
+        padding: 12px;
+        background-color: #4CAF50;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .register-container button:hover {
+        background-color: #45a049;
+    }
+
+    .message {
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+
+    .message.error {
+        color: #e74c3c;
+    }
+
+    .message.success {
+        color: #27ae60;
+    }
+
+    .password-mismatch {
+        color: #e74c3c;
+        font-size: 14px;
+        margin-bottom: 15px;
+        display: none;
+    }
+</style>
+<script>
+    function checkPasswords() {
+        const pwd = document.getElementById('password').value;
+        const confirmPwd = document.getElementById('confirm_password').value;
+        const warning = document.getElementById('passwordMismatchWarning');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (pwd !== confirmPwd) {
+            warning.style.display = 'block';
+            submitBtn.disabled = true;
+        } else {
+            warning.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    }
+</script>
+{% endblock %}
+
 {% block body %}
-    <form method="post">
-    {% csrf_token %}
+<div class="register-container">
+    <h2>用户注册</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <p class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    <form method="post" action="{% url 'register' %}" oninput="checkPasswords()">
+        {% csrf_token %}
         <label for="username">用户名</label>
-        <input type="text" name="username">
+        <input type="text" id="username" name="username" required>
+
         <label for="password">密码</label>
-        <input type="password" name="password">
-        <button type="submit">注册</button>
+        <input type="password" id="password" name="password" required>
+
+        <label for="confirm_password">确认密码</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
+
+        <p id="passwordMismatchWarning" class="password-mismatch">两次输入的密码不一致哦~</p>
+
+        <button type="submit" id="submitBtn">注册</button>
     </form>
+</div>
 {% endblock %}
